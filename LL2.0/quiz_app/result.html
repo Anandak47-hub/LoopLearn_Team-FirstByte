@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Result</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align:center; margin-top:50px; }
+    button {
+        padding:10px 20px;
+        font-size:16px;
+        background:#007BFF;
+        color:#fff;
+        border:none;
+        border-radius:5px;
+        cursor:pointer;
+        margin-top:20px;
+    }
+    button:hover { background:#0056b3; }
+  </style>
+</head>
+<body>
+  <h1>Your Total Score: <span id="score"></span></h1>
+  <p id="judge"></p>
+
+
+  <!-- ✅ Button to go back to index.php -->
+  <button id="homeBtn">Back to Home</button>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const score  = params.get('score');
+const topicId = params.get('topic_id');
+
+document.getElementById('score').textContent = score;
+const title =
+    score < 15 ? "Beginner" :
+    score < 25 ? "Intermediate" : "Expert";
+document.getElementById('judge').textContent = title;
+   
+fetch('backend/save_title.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topic_id: topicId, title: title })
+});
+
+// ✅ button to return home
+document.getElementById('homeBtn').addEventListener('click', () => {
+    window.location.href="../dashboard.php";
+});
+
+</script>
+</body>
+</html>

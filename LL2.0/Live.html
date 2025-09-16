@@ -1,0 +1,69 @@
+<section id="liveClasses" class="space-y-4">
+  <h3 class="text-xl font-bold mb-4">👥 Available Live Classes</h3>
+  <div id="classList"></div>
+</section>
+
+<script>
+  // Save new class
+  document.getElementById("hostForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const title = document.getElementById("classTitle").value.trim();
+    const host = document.getElementById("classHostName").value.trim();
+
+    const roomId = title.toLowerCase().replace(/\s+/g, "-") + "-" + Date.now();
+    const roomUrl = `https://meet.jit.si/${roomId}`;
+
+    fetch("save_class.php", {
+      method: "POST",
+      body: new URLSearchParams({
+        title: title,
+        host: host,
+        roomUrl: roomUrl
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        loadClasses(); // Refresh after hosting
+      } else {
+        alert("Error: " + data.message);
+      }
+    });
+
+    document.getElementById("classTitle").value = "";
+    document.getElementById("classHostName").value = "";
+  });
+
+  // Load available classes
+  function loadClasses() {
+    fetch("fetch_classes.php")
+      .then(res => res.json())
+      .then(classes => {
+        const container = document.getElementById("classList");
+        container.innerHTML = "";
+
+        if (classes.length === 0) {
+          container.innerHTML = `<p class="text-gray-500">No live classes available.</p>`;
+          return;
+        }
+
+        classes.forEach(c => {
+          const card = document.createElement("div");
+          card.className = "bg-white p-6 rounded shadow border hover:shadow-md transition";
+          card.innerHTML = `
+            <h4 class="text-xl font-bold mb-1">${c.title}</h4>
+            <p class="text-sm text-gray-500 mb-3">Hosted by: ${c.host}</p>
+            <a href="${c.room_url}" target="_blank"
+               class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+               Join Now
+            </a>
+          `;
+          container.appendChild(card);
+        });
+      });
+  }
+
+  // Load classes on page open
+  loadClasses();
+</script>

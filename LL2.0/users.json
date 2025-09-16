@@ -1,0 +1,51 @@
+[
+    {
+        "fullname": "Anand Koiri",
+        "email": "fake@gmail.com",
+        "password": "$2y$10$G0RkthPqWoeJtFKTV7jY4.DdVVQ0.qZJGx6tjspiBf5E0M2WPdGdK",
+        "credit": 120,
+        "typing": false
+    },
+    {
+        "fullname": "Debojit Kamila",
+        "email": "kamiladebojit0908@gmail.com",
+        "password": "$2y$10$b8Ii3GGiCEzWYlq96mpBu.gvXwItmQpXi73EIJ11kXYmwLToNEsWa",
+        "credit": 120,
+        "typing": false
+    },
+    {
+        "fullname": "Debojit mondal",
+        "email": "kamilababy038@gmail.com",
+        "password": "$2y$10$wKSVF54DOQYQ5Tk93l5yyuGed9hvOGMYVLT0emTs1wqZCnddZ.cYG",
+        "credit": 120,
+        "typing": false
+    },
+    {
+        "fullname": "Debojit Camilo",
+        "email": "debo@g.com",
+        "password": "$2y$10$B2.Df9X23IjPewqv8F04GOhQnC2JPzj9VGfj6wpk7aSSf8V.eBaKu",
+        "credit": 120,
+        "typing": false
+    },
+    {
+        "fullname": "Bagha Hosiyar",
+        "email": "Bagga@smart.com",
+        "password": "$2y$10$tlyIa7q3ko8B5OEjmuTCJu9L8XALsh00Qhf7IQ2OeQQTKg\/mk2Gf6",
+        "credit": 120,
+        "typing": false
+    },
+    {
+        "fullname": "Anand",
+        "email": "anand@main.com",
+        "password": "$2y$10$j8ge14mTorwp1QTA8Sk3seCanwR\/XPZgEKdV.VLpPzLGMDv9krSUG",
+        "credit": 120,
+        "typing": false
+    },
+    {
+        "fullname": "Anand",
+        "email": "koiri@mail.com",
+        "password": "$2y$10$KwIHCkRuWFYc\/VRcOjNYtez5HCtDQ9294xepQL0WcL2aZpjnHSCri",
+        "credit": 120,
+        "typing": false
+    }
+]

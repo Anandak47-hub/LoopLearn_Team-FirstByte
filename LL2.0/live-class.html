@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LoopLearn - Host Class</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+
+  <!-- ✅ Header -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">🎥 Host a Class</h1>
+      <a href="dashboard.php" class="bg-white text-blue-600 px-3 py-1 rounded shadow hover:bg-gray-200">⬅ Back To Dash</a>
+    </div>
+  </nav>
+
+  <!-- ✅ Host Form -->
+  <section class="p-6 max-w-2xl mx-auto">
+    <div class="bg-white shadow p-6 rounded-lg hover:shadow-lg transition border border-gray-300">
+      <h2 class="text-2xl font-bold mb-6 text-center">Create Your Class</h2>
+
+      <form id="hostForm" class="space-y-4">
+        <div>
+          <label class="block font-semibold mb-1">📌 Class Title</label>
+          <input type="text" id="classTitle" required 
+                 class="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">👨‍🏫 Name of the Host</label>
+          <input type="text" id="instructor" required 
+                 class="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">🕒 Time</label>
+          <input type="text" id="time" placeholder="e.g. Today, 5PM - 6PM" required 
+                 class="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <button type="submit" 
+                class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+          🚀 Host Now
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById("hostForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById("classTitle").value;
+      const instructor = document.getElementById("instructor").value;
+      const time = document.getElementById("time").value;
+
+      // Generate unique Jitsi room (safe name)
+      const roomName = "LoopLearn_" + title.replace(/\s+/g, "_") + "_" + Date.now();
+
+      // Save class info (with Jitsi link) into localStorage
+      let classes = JSON.parse(localStorage.getItem("runningClasses")) || [];
+      classes.push({ title, instructor, time, room: roomName });
+      localStorage.setItem("runningClasses", JSON.stringify(classes));
+
+      // Redirect host to Jitsi meeting page
+      window.location.href = "video-session.html?room=" + encodeURIComponent(roomName);
+    });
+  </script>
+
+

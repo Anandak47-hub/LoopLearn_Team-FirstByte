@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+h1 { color: #333; }
+#topics li { list-style: none; margin: 10px 0; }
+#topics li a { text-decoration: none; color: #007BFF; }
+#topics li a:hover { text-decoration: underline; }

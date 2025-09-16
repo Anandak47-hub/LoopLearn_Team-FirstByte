@@ -1,0 +1,191 @@
+<?php
+session_start();
+if(!isset($_SESSION["email"])){
+  header("Location:login.php");
+  exit();
+}//Superglobal Variable Session is set to use the email of the user 
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - LoopLearn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("menuDropdown");
+      menu.classList.toggle("hidden");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    function copyReferral() {
+      const copyText = document.getElementById("refCode");
+      navigator.clipboard.writeText(copyText.value);
+      alert("Referral code copied!");
+    }
+  </script>
+  <style>
+    body.dark {
+      background-color: #1f2937;
+      color: #f9fafb;
+    }
+    .dark .bg-white { background-color: #1f2937; }
+    .dark .text-gray-800 { color: #f9fafb; }
+    .dark .text-gray-600 { color: #d1d5db; }
+    .dark .bg-gray-50 { background-color: #374151; }
+    .dark .bg-yellow-50 { background-color: #4b5563; }
+    .dark .text-yellow-700 { color: #fde68a; }
+    .dark .bg-green-100 { background-color: #065f46; color: #d1fae5; }
+    .dark .bg-gray-100 { background-color: #1f2937; }
+    .dark .bg-blue-600:hover { background-color: #2563eb; }
+    .dark .menu-icon { color: #ffffff; }
+    .dark .border-white { border-color: #ffffff; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+
+  <!-- ✅ Header -->
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">LoopLearn Dashboard</h1>
+      <div class="flex items-center gap-4">
+        
+        <div class="relative">
+          <button onclick="toggleMenu()" class="text-white text-2xl menu-icon">⋮</button>
+          <div id="menuDropdown" class="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg text-sm text-gray-700 hidden z-50">
+            <a href="logout.php" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
+            <button onclick="toggleDarkMode()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Toggle Dark Mode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ Welcome -->
+  <section class="p-6 text-center">
+    <h2 class="text-3xl font-bold">Welcome, <?php echo $_SESSION["fullname"];?> 👋</h2>
+    <p class="mt-2 text-gray-600">Ready to help or learn something today?</p>
+  </section>
+
+  <!-- ✅ Main Dashboard Cards -->
+  <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+ <div class="bg-white shadow p-6 rounded text-center hover:shadow-lg transition border border-gray-300 dark:border-white hover:border-glow">
+
+      <h3 class="text-xl font-bold mb-2">Ask a Doubt</h3>
+      <p class="text-gray-600 mb-4">Start a session to get help</p>
+      <a href="doubt-room.php" class="bg-blue-600 text-white px-4 py-2 rounded">Start Now</a>
+    </div>
+    <div class="bg-white shadow p-6 rounded text-center hover:shadow-lg transition border border-gray-300 dark:border-white hover:border-glow">
+      <h3 class="text-xl font-bold mb-2">Live Class Room</h3>
+      <p class="text-gray-600 mb-4">Join or host a class in real-time</p>
+      <a href="live-class.html" class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-600 transition">Host</a>
+    </div>
+    <div class="bg-white shadow p-6 rounded text-center hover:shadow-lg transition border border-gray-300 dark:border-white hover:border-glow">
+      <h3 class="text-xl font-bold mb-2">Leaderboard</h3>
+      <p class="text-gray-600 mb-4">See top contributors</p>
+      <a href="leaderboard.html" class="bg-purple-700 text-white px-4 py-2 rounded">View</a>
+    </div>
+    <div class="bg-white shadow p-6 rounded text-center hover:shadow-lg transition border border-gray-300 dark:border-white hover:border-glow">
+      <h3 class="text-xl font-bold mb-2">Mentor quiz</h3>
+      <p class="text-gray-600 mb-4">Try your skills</p>
+      <a href="quiz_app\index.php" class="bg-purple-700 text-white px-4 py-2 rounded">View</a>
+    </div>
+    
+  </main>
+
+  <!-- ✅ Recent Activity -->
+  <section class="p-6 max-w-4xl mx-auto">
+    <h3 class="text-2xl font-bold mb-4">Recent Activity</h3>
+    <ul class="bg-white rounded shadow divide-y divide-gray-200">
+      <li class="p-4">✅ You solved a doubt on “Tailwind Flexbox” – 10 Credits Earned</li>
+      <li class="p-4">🎯 You joined a session: "React Basics Help"</li>
+      
+    </ul>
+  </section>
+
+  <!-- ✅ Login Streak -->
+  <section class="bg-white p-6 rounded shadow max-w-4xl mx-auto mt-6">
+    <h3 class="text-2xl font-bold mb-4">Daily Login Streak</h3>
+    <div class="grid grid-cols-7 gap-2 text-center">
+      <div class="p-3 rounded border bg-green-100 font-semibold">Day 1</div>
+      <div class="p-3 rounded border bg-green-100 font-semibold">Day 2</div>
+      <div class="p-3 rounded border bg-green-100 font-semibold">Day 3</div>
+      <div class="p-3 rounded border bg-green-100 font-semibold">Day 4</div>
+      <div class="p-3 rounded border bg-green-100 font-semibold">Day 5</div>
+      <div class="p-3 rounded border bg-green-100 font-semibold">Day 6</div>
+      <div class="p-3 rounded border bg-yellow-200 text-yellow-800 font-bold animate-bounce">🎁 Day 7</div>
+    </div>
+    <p class="mt-4 text-sm text-gray-600">Log in for 7 consecutive days!</p>
+  </section>
+
+  <!-- ✅ Daily Missions -->
+
+  <section class="bg-white p-6 rounded shadow max-w-4xl mx-auto mt-6">
+    <div class="bg-white shadow p-6 rounded text-center hover:shadow-lg transition border border-gray-300 dark:border-white hover:border-glow">
+    <h3 class="text-2xl font-bold mb-4">📋 Daily Missions</h3>
+    <ul class="space-y-4">
+      <li class="flex items-center justify-between p-4 bg-gray-50 border rounded">
+        <div>✅ <strong>Join a Class</strong> <span class="text-sm text-gray-500"></span></div>
+        <a href="running-class.html" class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-600 transition">Join Class</a>
+        
+      </li>
+      <li class="flex items-center justify-between p-4 bg-gray-50 border rounded">
+        <div>🧑‍🏫 <strong>Host a Class</strong> <span class="text-sm text-gray-500"></span></div>
+        <a href="live-class.html" class="bg-purple-600 text-white px-4 py-1 rounded hover:bg-yellow-400 text-sm">Host Now</a>
+      </li>
+      <li class="flex items-center justify-between p-4 bg-gray-50 border rounded">
+        <div>❓<strong>Ask a doubt</strong> <span class="text-sm text-gray-500"></span></div>
+        <a href="doubt-room.php" class="bg-teal-600 text-white px-4 py-1 rounded hover:bg-yellow-400 text-sm">Ask now</a>
+      </li>
+      <li class="flex items-center justify-between p-4 bg-gray-50 border rounded">
+        <div>📝 <strong>Solve a doubt</strong> <span class="text-sm text-gray-500"></span></div>
+        <a href="doubt-room.php" class="bg-green-500 text-white px-4 py-1 rounded hover:bg-yellow-400 text-sm">Solve</a>
+      </li>
+      <li class="flex items-center justify-between p-4 bg-gray-50 border rounded">
+        <div>📝 <strong> Screen sharing</strong> <span class="text-sm text-gray-500"></span></div>
+        <a href="screenshare-PHP\public\share.php" class="bg-green-500 text-white px-4 py-1 rounded hover:bg-yellow-400 text-sm">Class</a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ✅ Refer and Earn -->
+  <section class="bg-white p-6 rounded shadow max-w-4xl mx-auto mt-6 mb-10">
+    <h3 class="text-2xl font-bold mb-4">🎁 Refer your peers</h3>
+    <p class="text-gray-600 mb-4">Invite your friends, when they join and verify.</p>
+    <div class="flex flex-col sm:flex-row items-center gap-4 mb-4">
+      <input type="text" value="LOOPLEARN123" readonly id="refCode" class="flex-1 border px-4 py-2 rounded bg-gray-100 text-center text-blue-700 font-semibold" />
+      <button onclick="copyReferral()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Copy Code</button>
+    </div>
+    <p class="text-sm text-gray-500">You’ve invited <strong>5 friends</strong>.</p>
+  </section>
+
+</body>
+</html>
+<style>
+  @keyframes borderGlow {
+    0% {
+      border-color: #60a5fa; /* blue-400 */
+      box-shadow: 0 0 0px #60a5fa;
+    }
+    50% {
+      border-color: #06b67b; /* yellow-400 */
+      box-shadow: 0 0 10px #07ca79;
+    }
+    100% {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0px #60a5fa;
+    }
+  }
+
+  .hover\:border-glow:hover {
+    animation: borderGlow 1s infinite;
+    border-width: 2px;
+    border-style: solid;
+  }
+</style>

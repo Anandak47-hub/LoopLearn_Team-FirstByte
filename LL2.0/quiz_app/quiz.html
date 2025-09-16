@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; text-align:center; margin:50px; }
+    button { padding:10px 20px; font-size:16px; background:#007BFF; color:#fff; border:none; border-radius:5px; cursor:pointer; margin-top:20px; }
+    button:hover { background:#0056b3; }
+    .question-block { margin-bottom:20px; text-align:left; display:inline-block; }
+  </style>
+</head>
+<body>
+  <h1 id="topicName"></h1>
+  <button id="startQuizBtn">Start Quiz</button>
+
+  <div id="quiz-container" style="display:none;"></div>
+  <button id="nextRound" style="display:none;">Next Round</button>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const topic_id = urlParams.get('topic_id');
+document.getElementById('topicName').textContent = urlParams.get('topic_name');
+
+let difficulties = ['easy','medium','hard'];
+let currentRound = 0;
+let totalScore = 0;
+
+// Load questions for current round
+function loadQuestions() {
+    fetch(`backend/get_questions.php?topic_id=${topic_id}&difficulty=${difficulties[currentRound]}`)
+    .then(res => res.json())
+    .then(showQuestions)
+    .catch(err => console.error(err));
+}
+
+// Display questions in quiz container
+function showQuestions(questions) {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
+    questions.forEach((q,i) => {
+        const div = document.createElement('div');
+        div.classList.add('question-block');
+        div.dataset.correct = q.correct_option;
+        div.innerHTML = `
+            <p>${i+1}. ${q.question_text}</p>
+            ${['a','b','c','d'].map(opt => `
+                <label>
+                  <input type="radio" name="q${q.id}" value="${opt}">
+                  ${q['option_'+opt]}
+                </label><br>
+            `).join('')}
+        `;
+        container.appendChild(div);
+    });
+    container.innerHTML += '<button onclick="submitAnswers()">Submit Round</button>';
+}
+
+// Submit answers for current round
+function submitAnswers() {
+    let roundScore = 0;
+    document.querySelectorAll('.question-block').forEach(block => {
+        const correct = block.dataset.correct;
+        const chosen = block.querySelector('input[type=radio]:checked');
+        if (chosen && chosen.value === correct) roundScore++;
+    });
+
+    totalScore += roundScore;
+    currentRound++;
+
+    if (currentRound < 3) {
+        document.getElementById('nextRound').style.display = 'block';
+    } else {
+        // Determine title
+        const title =
+            totalScore < 15 ? "Beginner" :
+            totalScore < 25 ? "Intermediate" : "Expert";
+
+        // Send result to server
+        fetch('backend/save_title.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topic_id: topic_id, title: title })
+        })
+        .then(res => res.json())
+        .then(data => {
+            window.location.href = `result.html?score=${totalScore}&title=${encodeURIComponent(title)}&topic_id=${topic_id}&topic_name=${encodeURIComponent(urlParams.get('topic_name'))}`;
+        })
+        .catch(err => console.error(err));
+    }
+}
+
+// Next round button
+document.getElementById('nextRound').addEventListener('click', () => {
+    document.getElementById('nextRound').style.display = 'none';
+    loadQuestions();
+});
+
+// ---------------- Anti-cheating code ----------------
+
+// Warn if user switches tab
+let warned = false;
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        if (!warned) {
+            alert("Switching tabs is not allowed. Next time the quiz will end.");
+            
+        } else {
+            window.location.href = `result.html?score=0&topic_id=${topic_id}&topic_name=${encodeURIComponent(urlParams.get('topic_name'))}`;
+        }
+    }
+});
+
+// Start Quiz button: request full-screen and start quiz
+document.getElementById('startQuizBtn').addEventListener('click', async () => {
+    await document.documentElement.requestFullscreen().catch(()=>{});
+    document.getElementById('startQuizBtn').style.display = 'none';
+    document.getElementById('quiz-container').style.display = 'block';
+    loadQuestions();
+});
+
+//End quiz if user exits full-screen
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+      alert("You left full-screen. Quiz terminated.");
+      
+   //     window.location.href = `result.html?score=0&topic_id=${topic_id}&topic_name=${encodeURIComponent(urlParams.get('topic_name'))}`;
+    }
+});
+
+// Optional: block right-click and copy
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+
+</script>
+</body>
+</html>
